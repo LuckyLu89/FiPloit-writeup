@@ -5,21 +5,29 @@ Introduction
 
 In this lab, the goal was to obtain both a user and root flag from a vulnerable web application.
 The challenge demonstrated a realistic attack chain involving:
+
 *Service discovery
 *Directory enumeration
 *Information disclosure
 *Insecure file upload
 *Remote Code Execution (RCE)
 *Privilege escalation via sudo misconfiguration
+
 This write-up walks through the full process step by step.
 
 Initial Access – Identifying the Service
 
 The target application was not accessible via the default HTTP port (80).
 Access was only possible by specifying port 8080:
+
 http://TARGET_IP:8080
-This indicates the web service was running on a non-standard port, a common setup in development environments. In a real engagement, this would typically be discovered using:
+
+This indicates the web service was running on a non-standard port, 
+a common setup in development environments. 
+In a real engagement, this would typically be discovered using:
+
 nmap -sC -sV -p- TARGET_IP
+
 Once port 8080 was identified as open, the web application became accessible.
 
 Directory & File Enumeration
@@ -48,7 +56,9 @@ Revealed internal developer notes such as:
 *Database credentials (marked to be changed)
 *Debug and configuration reminders
 This represents Sensitive Information Disclosure. Most importantly, it referenced:
+
 /upload_log_temp4.php
+
 This indicated a potential attack surface via file upload.
 
 Exploiting the File Upload Functionality
@@ -59,9 +69,11 @@ shell.php   ---> was blocked
 However, the validation only checked whether .txt appeared in the filename.
 It did not enforce it as the sole extension.
 Uploading:
+
 shell.txt.php
 
 successfully bypassed the filter.
+
 Why this worked ?
 The application checked for .txt
 Apache interpreted the last extension
@@ -71,9 +83,12 @@ This is a classic Improper File Extension Validation vulnerability.
 
 Achieving Remote Code Execution (RCE):
 The uploaded file contained a simple PHP command execution payload (modified here for documentation safety):
+
 <?p_h_p system($_GET['cmd']); ?>
+
 Accessing:
 http://TARGET_IP:8080/uploads/shell.txt.php?cmd=whoami
+
 Returned the server user.
 At this moment, Remote Code Execution was achieved.
 The attack flow was:
@@ -89,7 +104,8 @@ Once RCE was obtained, system enumeration began:
 id
 pwd
 ls /home
-The user context was confirmed, and navigating to the user’s home directory revealed: flag-user.txt
+The user context was confirmed, 
+and navigating to the user’s home directory revealed: flag-user.txt
 Reading the file via the web shell retrieved the user flag.
 
 Privilege Escalation
@@ -102,11 +118,13 @@ This is a critical misconfiguration.
 Allowing a user to execute PHP via sudo is equivalent to granting root shell access.
 Using PHP CLI:
 sudo php -r 'system("id");'
-Confirmed execution as a root. The root flag was then retrieved from the root directory.
+Confirmed execution as a root. 
+The root flag was then retrieved from the root directory.
 
 Full Exploitation Chain
 
 The complete attack path:
+
 1.Service discovery on port 8080
 2.Directory enumeration
 3.Discovery of developer notes
@@ -127,3 +145,5 @@ Proper post-exploitation enumeration
 Privilege escalation through misconfiguration
 The most important takeaway is not the individual commands, but the reasoning process behind each step.
 Small oversights in development can lead to complete system compromise.
+
+This repository is maintained for educational purposes.
