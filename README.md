@@ -42,6 +42,7 @@ gobuster dir -u http://TARGET_IP:8080/ \
 This revealed several resorces including:
 
 /notes.txt
+
 /upload_log_temp4.php
 
 The discovery of notes.txt was critical. 
@@ -52,9 +53,11 @@ Accessing:
 http://TARGET_IP:8080/notes.txt
 
 Revealed internal developer notes such as:
+
 *A temporary upload endpoint not removed before production
 *Database credentials (marked to be changed)
-*Debug and configuration reminders
+*Debug and configuration reminders.
+
 This represents Sensitive Information Disclosure. Most importantly, it referenced:
 
 /upload_log_temp4.php
@@ -92,18 +95,20 @@ http://TARGET_IP:8080/uploads/shell.txt.php?cmd=whoami
 Returned the server user.
 At this moment, Remote Code Execution was achieved.
 The attack flow was:
-HTTP request sent with cmd parameter
-Apache passed file to PHP interpreter
-PHP executed system command
-Output returned in HTTP response
+HTTP request sent with cmd parameter.
+Apache passed file to PHP interpreter.
+PHP executed system command.
+Output returned in HTTP response.
 This provided full command execution on the server.
 
 User Enumeration & User Flag
 
 Once RCE was obtained, system enumeration began:
+
 id
 pwd
 ls /home
+
 The user context was confirmed, 
 and navigating to the user’s home directory revealed: flag-user.txt
 Reading the file via the web shell retrieved the user flag.
@@ -141,11 +146,12 @@ Conclusion
 
 This lab was an excellent demonstration of:
 
-* Realistic web exploitation
-* Logical attack chaining
-* Proper post-exploitation enumeration
-* Privilege escalation through misconfiguration
-* The most important takeaway is not the individual commands, but the reasoning process behind each step.
+* Realistic web exploitation,
+* Logical attack chaining, 
+* Proper post-exploitation enumeration,
+* Privilege escalation through misconfiguration,
+* The most important takeaway is not the individual commands,
+  but the reasoning process behind each step.
 * Small oversights in development can lead to complete system compromise.
 
 This repository is maintained for educational purposes.
