@@ -125,25 +125,27 @@ Full Exploitation Chain
 
 The complete attack path:
 
-1.Service discovery on port 8080
-2.Directory enumeration
-3.Discovery of developer notes
-4.Identification of temporary upload endpoint
-5.File upload bypass via double extension
-6.Web shell upload
-7.Remote Code Execution
-8.Sudo misconfiguration abuse
-9.Root privilege escalation
-10.This demonstrates how multiple small misconfigurations can combine into full system compromise.
+1. Service discovery on port 8080
+2. Directory enumeration
+3. Discovery of developer notes
+4. Identification of temporary upload endpoint
+5. File upload bypass via double extension
+6. Web shell upload
+7. Remote Code Execution
+8. Sudo misconfiguration abuse
+9. Root privilege escalation
+10. This demonstrates how multiple small misconfigurations
+    can combine into full system compromise.
 
 Conclusion
 
 This lab was an excellent demonstration of:
-Realistic web exploitation
-Logical attack chaining
-Proper post-exploitation enumeration
-Privilege escalation through misconfiguration
-The most important takeaway is not the individual commands, but the reasoning process behind each step.
-Small oversights in development can lead to complete system compromise.
+
+* Realistic web exploitation
+* Logical attack chaining
+* Proper post-exploitation enumeration
+* Privilege escalation through misconfiguration
+* The most important takeaway is not the individual commands, but the reasoning process behind each step.
+* Small oversights in development can lead to complete system compromise.
 
 This repository is maintained for educational purposes.
